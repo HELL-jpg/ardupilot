@@ -194,7 +194,7 @@ const AP_Scheduler::Task Copter::scheduler_tasks[] = {
 
 constexpr int8_t Copter::_failsafe_priorities[7];
 
-void Copter::setup()
+void Copter::setup()   //³õÊ¼»¯
 {
     // Load the default values of variables listed in var_info[]s
     AP_Param::setup_sketch_defaults();
@@ -451,6 +451,10 @@ void Copter::one_hz_loop()
     // indicates that the sensor or subsystem is present but not
     // functioning correctly
     update_sensor_status_flags();
+    gcs().send_text(MAV_SEVERITY_CRITICAL,
+                     "Current altitude: %.1fm",
+                     copter.flightmode->get_alt_above_ground()/100.0f);
+
 }
 
 // called at 50hz
