@@ -452,7 +452,7 @@ void Copter::one_hz_loop()
     update_sensor_status_flags();
 /*   gcs().send_text(MAV_SEVERITY_CRITICAL,
                      "distance",
-                     AP_RangeFinder_Sui04::distance);*/
+                     RangeFinder_State::range_valid_count);*/
 
 }
 
