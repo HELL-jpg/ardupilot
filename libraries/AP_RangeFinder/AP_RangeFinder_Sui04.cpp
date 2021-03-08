@@ -14,16 +14,14 @@
  */
 
 /*
- *       AP_RangeFinder_MaxsonarI2CXL.cpp - Arduino Library for MaxBotix I2C XL sonar
+ *       AP_RangeFinder_Sui04.cpp - Arduino Library for MaxBotix I2C XL sonar
  *       Code by Randy Mackay. DIYDrones.com
  *
  *       datasheet: http://www.maxbotix.com/documents/I2CXL-MaxSonar-EZ_Datasheet.pdf
  *
  *       Sensor should be connected to the I2C port
  */
-
-
-#include "AP_RangeFinder_MaxsonarI2CXL.h"
+#include "AP_RangeFinder_Sui04.h"
 
 #include <utility>
 
@@ -32,17 +30,12 @@
 
 extern const AP_HAL::HAL& hal;
 
-
-
 /*
    The constructor also initializes the rangefinder. Note that this
    constructor is not called until detect() returns true, so we
    already know that we should setup the rangefinder
 */
-
-
-
-AP_RangeFinder_MaxsonarI2CXL::AP_RangeFinder_MaxsonarI2CXL(RangeFinder::RangeFinder_State &_state,
+AP_RangeFinder_Sui04::AP_RangeFinder_Sui04(RangeFinder::RangeFinder_State &_state,
                                                            AP_HAL::OwnPtr<AP_HAL::I2CDevice> dev)
     : AP_RangeFinder_Backend(_state)
     , _dev(std::move(dev))
@@ -54,15 +47,15 @@ AP_RangeFinder_MaxsonarI2CXL::AP_RangeFinder_MaxsonarI2CXL(RangeFinder::RangeFin
    trying to take a reading on I2C. If we get a result the sensor is
    there.
 */
-AP_RangeFinder_Backend *AP_RangeFinder_MaxsonarI2CXL::detect(RangeFinder::RangeFinder_State &_state,
+AP_RangeFinder_Backend *AP_RangeFinder_Sui04::detect(RangeFinder::RangeFinder_State &_state,
                                                              AP_HAL::OwnPtr<AP_HAL::I2CDevice> dev)
 {
     if (!dev) {
         return nullptr;
     }
 
-    AP_RangeFinder_MaxsonarI2CXL *sensor
-        = new AP_RangeFinder_MaxsonarI2CXL(_state, std::move(dev));
+    AP_RangeFinder_Sui04 *sensor
+        = new AP_RangeFinder_Sui04(_state, std::move(dev));
     if (!sensor) {
         return nullptr;
     }
@@ -75,12 +68,10 @@ AP_RangeFinder_Backend *AP_RangeFinder_MaxsonarI2CXL::detect(RangeFinder::RangeF
     return sensor;
 }
 
-
-
 /*
   initialise sensor
  */
-bool AP_RangeFinder_MaxsonarI2CXL::_init(void)
+bool AP_RangeFinder_Sui04::_init(void)
 {
     if (!_dev->get_semaphore()->take(HAL_SEMAPHORE_BLOCK_FOREVER)) {
         return false;
@@ -103,27 +94,22 @@ bool AP_RangeFinder_MaxsonarI2CXL::_init(void)
     _dev->get_semaphore()->give();
 
     _dev->register_periodic_callback(100000,
-                                     FUNCTOR_BIND_MEMBER(&AP_RangeFinder_MaxsonarI2CXL::_timer, void));
+                                     FUNCTOR_BIND_MEMBER(&AP_RangeFinder_Sui04::_timer, void));
 
     return true;
 }
 
-
-
 // start_reading() - ask sensor to make a range reading
-bool AP_RangeFinder_MaxsonarI2CXL::start_reading()
+bool AP_RangeFinder_Sui04::start_reading()
 {
-    uint8_t cmd = AP_RANGE_FINDER_MAXSONARI2CXL_COMMAND_TAKE_RANGE_READING;
+    uint8_t cmd = AP_RANGE_FINDER_SUI04_COMMAND_TAKE_RANGE_READING;
 
     // send command to take reading
     return _dev->transfer(&cmd, sizeof(cmd), nullptr, 0);
 }
 
-
-
-
 // read - return last value measured by sensor
-bool AP_RangeFinder_MaxsonarI2CXL::get_reading(uint16_t &reading_cm)
+bool AP_RangeFinder_Sui04::get_reading(uint16_t &reading_cm)
 {
     be16_t val;
 
@@ -141,13 +127,10 @@ bool AP_RangeFinder_MaxsonarI2CXL::get_reading(uint16_t &reading_cm)
     return ret;
 }
 
-
-
-
 /*
   timer called at 10Hz
 */
-void AP_RangeFinder_MaxsonarI2CXL::_timer(void)
+void AP_RangeFinder_Sui04::_timer(void)
 {
     uint16_t d;
     if (get_reading(d)) {
@@ -160,12 +143,10 @@ void AP_RangeFinder_MaxsonarI2CXL::_timer(void)
     }
 }
 
-
-
 /*
    update the state of the sensor
 */
-void AP_RangeFinder_MaxsonarI2CXL::update(void)
+void AP_RangeFinder_Sui04::update(void)
 {
     if (_sem->take_nonblocking()) {
         if (new_distance) {
@@ -179,5 +160,3 @@ void AP_RangeFinder_MaxsonarI2CXL::update(void)
         _sem->give();
     }
 }
-
-

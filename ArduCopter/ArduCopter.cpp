@@ -74,7 +74,6 @@
  */
 
 #include "Copter.h"
-
 #define SCHED_TASK(func, rate_hz, max_time_micros) SCHED_TASK_CLASS(Copter, &copter, func, rate_hz, max_time_micros)
 
 /*
@@ -451,9 +450,9 @@ void Copter::one_hz_loop()
     // indicates that the sensor or subsystem is present but not
     // functioning correctly
     update_sensor_status_flags();
-    gcs().send_text(MAV_SEVERITY_CRITICAL,
-                     "Current altitude: %.1fm",
-                     copter.flightmode->get_alt_above_ground()/100.0f);
+/*   gcs().send_text(MAV_SEVERITY_CRITICAL,
+                     "distance",
+                     AP_RangeFinder_Sui04::distance);*/
 
 }
 

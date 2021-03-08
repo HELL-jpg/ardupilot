@@ -12,7 +12,7 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+#include "AP_RangeFinder_Sui04.h"
 #include "RangeFinder.h"
 #include "AP_RangeFinder_analog.h"
 #include "AP_RangeFinder_PulsedLightLRF.h"
@@ -655,6 +655,14 @@ void RangeFinder::detect_instance(uint8_t instance, uint8_t& serial_instance)
         for (int8_t i=3; i>=0; i--) {
             if (_add_backend(AP_RangeFinder_MaxsonarI2CXL::detect(state[instance],
                                                                   hal.i2c_mgr->get_device(i, AP_RANGE_FINDER_MAXSONARI2CXL_DEFAULT_ADDR)))) {
+                break;
+            }
+        }
+        break;
+    case RangeFinder_TYPE_Sui04:
+        for (int8_t i=3; i>=0; i--) {
+            if (_add_backend(AP_RangeFinder_Sui04::detect(state[instance],
+                                                                  hal.i2c_mgr->get_device(i, AP_RANGE_FINDER_SUI04_DEFAULT_ADDR)))) {
                 break;
             }
         }
