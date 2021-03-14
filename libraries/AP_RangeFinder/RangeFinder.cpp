@@ -17,6 +17,7 @@
 #include "AP_RangeFinder_analog.h"
 #include "AP_RangeFinder_PulsedLightLRF.h"
 #include "AP_RangeFinder_MaxsonarI2CXL.h"
+#include "AP_RangeFinder_SUI04.h"
 #include "AP_RangeFinder_MaxsonarSerialLV.h"
 #include "AP_RangeFinder_BBB_PRU.h"
 #include "AP_RangeFinder_LightWareI2C.h"
@@ -340,6 +341,15 @@ void RangeFinder::detect_instance(uint8_t instance, uint8_t& serial_instance)
             }
         }
         break;
+    case RangeFinder_TYPE_SUI04:
+           FOREACH_I2C(i) {
+               if (_add_backend(AP_RangeFinder_SUI04::detect(state[instance], params[instance],
+                                                                     hal.i2c_mgr->get_device(i, AP_RANGE_FINDER_SUI04_DEFAULT_ADDR)))) {
+                   break;
+               }
+           }
+           break;
+
     case RangeFinder_TYPE_LWI2C:
         if (params[instance].address) {
             // the LW20 needs a long time to boot up, so we delay 1.5s here
