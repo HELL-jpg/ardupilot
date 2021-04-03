@@ -470,10 +470,10 @@ void Copter::one_hz_loop()
 
 ////////////////////////
 
-    gcs().send_text(MAV_SEVERITY_CRITICAL,
+ /*   gcs().send_text(MAV_SEVERITY_CRITICAL,
                      "Current distance1: %.1fm",
                   0
-                  );
+                  );*/
 
 
 /////////////////////////

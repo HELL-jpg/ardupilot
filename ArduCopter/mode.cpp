@@ -409,19 +409,20 @@ void Mode::get_pilot_desired_lean_angles(float &roll_out, float &pitch_out, floa
     roll_out = channel_roll->get_control_in();
     pitch_out = channel_pitch->get_control_in();
 
-	// limit max lean angle
+	// limit max lean angle 限制安全倾斜角最大角度
     angle_limit = constrain_float(angle_limit, 1000.0f, angle_max);
 
-    // scale roll and pitch inputs to ANGLE_MAX parameter range
+    // scale roll and pitch inputs to ANGLE_MAX parameter range 求出系数
     float scaler = angle_max/(float)ROLL_PITCH_YAW_INPUT_MAX;
     roll_out *= scaler;
     pitch_out *= scaler;
 
-    // do circular limit
-    float total_in = norm(pitch_out, roll_out);
+    // do circular limit  循环极限
+    float total_in = norm(pitch_out, roll_out);  //横滚和俯仰合成限制
     if (total_in > angle_limit) {
         float ratio = angle_limit / total_in;
         roll_out *= ratio;
+      //  pitch_out = 0.5*angle_max;
         pitch_out *= ratio;
     }
 

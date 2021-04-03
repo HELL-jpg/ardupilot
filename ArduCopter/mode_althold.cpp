@@ -6,6 +6,8 @@
  */
 
 // althold_init - initialise althold controller
+
+
 bool ModeAltHold::init(bool ignore_checks)
 {
     // initialise position and desired velocity
@@ -17,20 +19,24 @@ bool ModeAltHold::init(bool ignore_checks)
     return true;
 }
 
+
 // althold_run - runs the althold controller
 // should be called at 100hz or more
 void ModeAltHold::run()
 {
-    float takeoff_climb_rate = 0.0f;
+    float takeoff_climb_rate = 0.0f;//起飞攀升速率
 
     // initialize vertical speeds and acceleration
+    //初始化垂直速度和加速度
     pos_control->set_max_speed_z(-get_pilot_speed_dn(), g.pilot_speed_up);
     pos_control->set_max_accel_z(g.pilot_accel_z);
 
     // apply SIMPLE mode transform to pilot inputs
+    //将遥控器的输入做简单化的转化   无头模式或者有头模式
     update_simple_mode();
 
     // get pilot desired lean angles
+
     float target_roll, target_pitch;
     get_pilot_desired_lean_angles(target_roll, target_pitch, copter.aparm.angle_max, attitude_control->get_althold_lean_angle_max());
 
@@ -97,10 +103,12 @@ void ModeAltHold::run()
         break;
     }
 
-    // call attitude controller
+    // call attitude controller 运行姿态控制器
     attitude_control->input_euler_angle_roll_pitch_euler_rate_yaw(target_roll, target_pitch, target_yaw_rate);
 
     // call z-axis position controller
     pos_control->update_z_controller();
 
 }
+
+

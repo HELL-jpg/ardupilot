@@ -501,15 +501,16 @@ bool AC_PosControl::is_active_z() const
 /// update_z_controller - fly to altitude in cm above home
 void AC_PosControl::update_z_controller()
 {
-    // check time since last cast
+    // check time since last cast检查上次运行时间
     const uint64_t now_us = AP_HAL::micros64();
-    if (now_us - _last_update_z_us > POSCONTROL_ACTIVE_TIMEOUT_US) {
+    if (now_us - _last_update_z_us > POSCONTROL_ACTIVE_TIMEOUT_US) //如果位置控制器在过去0.2秒内被调用，则认为是激活的，否则如果大于0.2秒，则认为是定高控制器不起作用
+    {
         _flags.reset_rate_to_accel_z = true;
         _pid_accel_z.set_integrator((_attitude_control.get_throttle_in() - _motors.get_throttle_hover()) * 1000.0f);
         _accel_target.z = -(_ahrs.get_accel_ef_blended().z + GRAVITY_MSS) * 100.0f;
         _pid_accel_z.reset_filter();
     }
-    _last_update_z_us = now_us;
+    _last_update_z_us = now_us; //获取时间用来判断垂直控制器是否激活
 
     // check for ekf altitude reset
     check_for_ekf_z_reset();
@@ -540,14 +541,14 @@ void AC_PosControl::run_z_controller()
 {
     float curr_alt = _inav.get_altitude();
 
-    // clear position limit flags
+    // clear position limit flags  清除位置限制标志
     _limit.pos_up = false;
     _limit.pos_down = false;
 
-    // calculate altitude error
+    // calculate altitude error 计算位置误差
     _pos_error.z = _pos_target.z - curr_alt;
 
-    // do not let target altitude get too far from current altitude
+    // do not let target altitude get too far from current altitude 不要让目标高度离当前高度太远
     if (_pos_error.z > _leash_up_z) {
         _pos_target.z = curr_alt + _leash_up_z;
         _pos_error.z = _leash_up_z;
@@ -559,10 +560,10 @@ void AC_PosControl::run_z_controller()
         _limit.pos_down = true;
     }
 
-    // calculate _vel_target.z using from _pos_error.z using sqrt controller
+    // calculate _vel_target.z using from _pos_error.z using sqrt controller 计算目标速度，通过z轴控制器和平方根控制器
     _vel_target.z = AC_AttitudeControl::sqrt_controller(_pos_error.z, _p_pos_z.kP(), _accel_z_cms, _dt);
 
-    // check speed limits
+    // check speed limits   速度限制
     // To-Do: check these speed limits here or in the pos->rate controller
     _limit.vel_up = false;
     _limit.vel_down = false;
@@ -575,12 +576,13 @@ void AC_PosControl::run_z_controller()
         _limit.vel_up = true;
     }
 
-    // add feed forward component
+    // add feed forward component   添加前馈组件
     if (_flags.use_desvel_ff_z) {
         _vel_target.z += _vel_desired.z;
     }
 
     // the following section calculates acceleration required to achieve the velocity target
+
 
     const Vector3f& curr_vel = _inav.get_velocity();
 
