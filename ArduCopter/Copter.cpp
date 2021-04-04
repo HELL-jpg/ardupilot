@@ -72,7 +72,7 @@
  *  Wiki: http://copter.ardupilot.org/
  *
  */
-
+#include <AP_Proximity/AP_Proximity.h>
 #include "Copter.h"
 
 #define FORCE_VERSION_H_INCLUDE
@@ -470,11 +470,10 @@ void Copter::one_hz_loop()
 
 ////////////////////////
 
- /*   gcs().send_text(MAV_SEVERITY_CRITICAL,
-                     "Current distance1: %.1fm",
-                  0
-                  );*/
-
+    float ang_deg, dist_m;
+    if(AP::proximity()->get_object_angle_and_distance(1, ang_deg, dist_m)){
+    gcs().send_text(MAV_SEVERITY_CRITICAL, "Current distance126: %.1fm",dist_m);
+    }
 
 /////////////////////////
 

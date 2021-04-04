@@ -24,15 +24,15 @@ bool ModeAltHold::init(bool ignore_checks)
 // should be called at 100hz or more
 void ModeAltHold::run()
 {
-    float takeoff_climb_rate = 0.0f;//Æð·ÉÅÊÉýËÙÂÊ
+    float takeoff_climb_rate = 0.0f;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
     // initialize vertical speeds and acceleration
-    //³õÊ¼»¯´¹Ö±ËÙ¶ÈºÍ¼ÓËÙ¶È
+    //ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½Ö±ï¿½Ù¶ÈºÍ¼ï¿½ï¿½Ù¶ï¿½
     pos_control->set_max_speed_z(-get_pilot_speed_dn(), g.pilot_speed_up);
     pos_control->set_max_accel_z(g.pilot_accel_z);
 
     // apply SIMPLE mode transform to pilot inputs
-    //½«Ò£¿ØÆ÷µÄÊäÈë×ö¼òµ¥»¯µÄ×ª»¯   ÎÞÍ·Ä£Ê½»òÕßÓÐÍ·Ä£Ê½
+    //ï¿½ï¿½Ò£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½òµ¥»ï¿½ï¿½ï¿½×ªï¿½ï¿½   ï¿½ï¿½Í·Ä£Ê½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í·Ä£Ê½
     update_simple_mode();
 
     // get pilot desired lean angles
@@ -88,6 +88,7 @@ void ModeAltHold::run()
     case AltHold_Flying:
         motors->set_desired_spool_state(AP_Motors::DesiredSpoolState::THROTTLE_UNLIMITED);
 
+
 #if AC_AVOID_ENABLED == ENABLED
         // apply avoidance
         copter.avoid.adjust_roll_pitch(target_roll, target_pitch, copter.aparm.angle_max);
@@ -95,15 +96,17 @@ void ModeAltHold::run()
 
         // adjust climb rate using rangefinder
         target_climb_rate = copter.surface_tracking.adjust_climb_rate(target_climb_rate);
+        ///////////////////
 
+
+        ///////////////////////////
         // get avoidance adjusted climb rate
         target_climb_rate = get_avoidance_adjusted_climbrate(target_climb_rate);
 
         pos_control->set_alt_target_from_climb_rate_ff(target_climb_rate, G_Dt, false);
         break;
     }
-
-    // call attitude controller ÔËÐÐ×ËÌ¬¿ØÖÆÆ÷
+    // call attitude controller ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     attitude_control->input_euler_angle_roll_pitch_euler_rate_yaw(target_roll, target_pitch, target_yaw_rate);
 
     // call z-axis position controller
