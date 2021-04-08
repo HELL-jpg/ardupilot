@@ -80,7 +80,7 @@ void ModeAltHold::run()
         // get avoidance adjusted climb rate
         target_climb_rate = get_avoidance_adjusted_climbrate(target_climb_rate);
 
-        // set position controller targets
+        // set position controller targets    throttle between low to high
         pos_control->set_alt_target_from_climb_rate_ff(target_climb_rate, G_Dt, false);
         pos_control->add_takeoff_climb_rate(takeoff_climb_rate, G_Dt);
         break;
@@ -88,30 +88,71 @@ void ModeAltHold::run()
     case AltHold_Flying:
         motors->set_desired_spool_state(AP_Motors::DesiredSpoolState::THROTTLE_UNLIMITED);
 
-
+/*
 #if AC_AVOID_ENABLED == ENABLED
         // apply avoidance
         copter.avoid.adjust_roll_pitch(target_roll, target_pitch, copter.aparm.angle_max);
 #endif
-
+*/
         // adjust climb rate using rangefinder
         target_climb_rate = copter.surface_tracking.adjust_climb_rate(target_climb_rate);
-        ///////////////////
 
-
-        ///////////////////////////
-        // get avoidance adjusted climb rate
+        // get avoidance adjusted climb rate   fense
         target_climb_rate = get_avoidance_adjusted_climbrate(target_climb_rate);
-
+        //throttle between low to high
         pos_control->set_alt_target_from_climb_rate_ff(target_climb_rate, G_Dt, false);
         break;
     }
     // call attitude controller ������̬������
     attitude_control->input_euler_angle_roll_pitch_euler_rate_yaw(target_roll, target_pitch, target_yaw_rate);
 
+    ///////////////////////////////////////////////////////
+            float ang_deg_forward, dist_m_forward,ang_deg_right,dist_m_right,ang_deg_back,dist_m_back,ang_deg_left,dist_m_left;
+            if(AP::proximity()->get_object_angle_and_distance(0, ang_deg_forward, dist_m_forward)){
+            gcs().send_text(MAV_SEVERITY_CRITICAL, "Current distance_forward: %.1fm",dist_m_forward);
+            }
+            if(AP::proximity()->get_object_angle_and_distance(2, ang_deg_right, dist_m_right)){
+              gcs().send_text(MAV_SEVERITY_CRITICAL, "Current distance_right: %.1fm",dist_m_right);
+              }
+            if(AP::proximity()->get_object_angle_and_distance(4, ang_deg_back, dist_m_back)){
+              gcs().send_text(MAV_SEVERITY_CRITICAL, "Current distance_back: %.1fm",dist_m_back);
+              }
+            if(AP::proximity()->get_object_angle_and_distance(6, ang_deg_left, dist_m_left)){
+              gcs().send_text(MAV_SEVERITY_CRITICAL, "Current distance_left: %.1fm",dist_m_left);
+              }
+
+
+if(dist_m_forward<2)
+{
+
+
+
+
+
+
+
+
+
+
+}
+else
+{
+
+
+
+
+
+
+
+
+}
+
+
+    ///////////////////////////////////////////////////////////
+     // call attitude controller ������̬������
+    attitude_control->input_euler_angle_roll_pitch_euler_rate_yaw(target_roll, target_pitch, target_yaw_rate);
     // call z-axis position controller
     pos_control->update_z_controller();
-
 }
 
 

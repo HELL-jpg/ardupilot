@@ -469,12 +469,21 @@ void Copter::one_hz_loop()
 
 
 ////////////////////////
-
-    float ang_deg, dist_m;
-    if(AP::proximity()->get_object_angle_and_distance(1, ang_deg, dist_m)){
-    gcs().send_text(MAV_SEVERITY_CRITICAL, "Current distance126: %.1fm",dist_m);
+/*
+    float ang_deg_forward, dist_m_forward,ang_deg_right,dist_m_right,ang_deg_back,dist_m_back,ang_deg_left,dist_m_left;
+    if(AP::proximity()->get_object_angle_and_distance(0, ang_deg_forward, dist_m_forward)){
+    gcs().send_text(MAV_SEVERITY_CRITICAL, "Current distance_forward: %.1fm",dist_m_forward);
     }
-
+    if(AP::proximity()->get_object_angle_and_distance(2, ang_deg_right, dist_m_right)){
+      gcs().send_text(MAV_SEVERITY_CRITICAL, "Current distance_right: %.1fm",dist_m_right);
+      }
+    if(AP::proximity()->get_object_angle_and_distance(4, ang_deg_back, dist_m_back)){
+      gcs().send_text(MAV_SEVERITY_CRITICAL, "Current distance_back: %.1fm",dist_m_back);
+      }
+    if(AP::proximity()->get_object_angle_and_distance(6, ang_deg_left, dist_m_left)){
+      gcs().send_text(MAV_SEVERITY_CRITICAL, "Current distance_left: %.1fm",dist_m_left);
+      }
+      */
 /////////////////////////
 
 

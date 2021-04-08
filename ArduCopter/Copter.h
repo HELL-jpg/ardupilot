@@ -1002,7 +1002,12 @@ public:
     void mavlink_delay_cb();    // GCS_Mavlink.cpp
     void failsafe_check();      // failsafe.cpp
 };
-
+    enum Tunnel_avoid_state{
+        FORWARD=0,
+        BACK=1,
+        RIGHT=2,
+        LEFT=3
+};
 extern Copter copter;
 
 using AP_HAL::millis;
