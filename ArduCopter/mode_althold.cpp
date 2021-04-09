@@ -35,6 +35,9 @@ void ModeAltHold::run()
     //��ң�������������򵥻���ת��   ��ͷģʽ������ͷģʽ
     update_simple_mode();
 
+
+
+
     // get pilot desired lean angles
 
     float target_roll, target_pitch;
@@ -88,12 +91,12 @@ void ModeAltHold::run()
     case AltHold_Flying:
         motors->set_desired_spool_state(AP_Motors::DesiredSpoolState::THROTTLE_UNLIMITED);
 
-/*
+
 #if AC_AVOID_ENABLED == ENABLED
         // apply avoidance
         copter.avoid.adjust_roll_pitch(target_roll, target_pitch, copter.aparm.angle_max);
 #endif
-*/
+
         // adjust climb rate using rangefinder
         target_climb_rate = copter.surface_tracking.adjust_climb_rate(target_climb_rate);
 
@@ -103,8 +106,7 @@ void ModeAltHold::run()
         pos_control->set_alt_target_from_climb_rate_ff(target_climb_rate, G_Dt, false);
         break;
     }
-    // call attitude controller ������̬������
-    attitude_control->input_euler_angle_roll_pitch_euler_rate_yaw(target_roll, target_pitch, target_yaw_rate);
+
 
     ///////////////////////////////////////////////////////
             float ang_deg_forward, dist_m_forward,ang_deg_right,dist_m_right,ang_deg_back,dist_m_back,ang_deg_left,dist_m_left;
@@ -122,33 +124,9 @@ void ModeAltHold::run()
               }
 
 
-if(dist_m_forward<2)
-{
-
-
-
-
-
-
-
-
-
-
-}
-else
-{
-
-
-
-
-
-
-
-
-}
-
-
     ///////////////////////////////////////////////////////////
+
+
      // call attitude controller ������̬������
     attitude_control->input_euler_angle_roll_pitch_euler_rate_yaw(target_roll, target_pitch, target_yaw_rate);
     // call z-axis position controller

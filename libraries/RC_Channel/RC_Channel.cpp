@@ -498,10 +498,11 @@ bool RC_Channel::read_aux()
         return false;
     }
     aux_switch_pos_t new_position;
-    if (!read_3pos_switch(new_position)) {
+    if (!read_3pos_switch(new_position))//judge aux position by PWM value
+    {
         return false;
     }
-
+                    //fangdou
     if (!debounce_completed(new_position)) {
         return false;
     }
